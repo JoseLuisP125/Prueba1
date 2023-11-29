@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rotar Matriz</title>
+</head>
+<body>
+  <h1>Rotar Matriz</h1>
+  
+  <form id="matrixForm">
+    <label for="entrada">Ingrese la matriz (formato: [[1,2,3],[4,5,6],[7,8,9]]):</label>
+    <input type="text" id="entrada" name="matrix" required>
+    <button type="button" onclick="rotarmatriz()">Rotar</button>
+  </form>
+
+  <div id="resultado"></div>
+
+  <script>
+    function rotarmatriz() {
+      const entrada = document.getElementById('entrada');
+      const resultadoDiv = document.getElementById('resultado');
+
+      // Obtener la matriz desde el campo de entrada
+      const matrix = JSON.parse(entrada.value);
+
+      // Realizar la solicitud POST al servidor
+      fetch('/rotar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ matrix })
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Mostrar la matriz rotada en sentido antihorario
+        resultadoDiv.innerHTML = `
+          <p>Matriz Rotada en sentido antihorario: ${JSON.stringify(data.rotar_antihorario)}</p>
+          <p>Matriz Rotada en sentido horario: ${JSON.stringify(data.rotar_horario)}</p>
+        `;
+      })
+      .catch(error => {
+        console.error(error);
+        resultadoDiv.innerHTML = '<p>Error en la solicitud.</p>';
+      });
+    }
+  </script>
+</body>
+</html>
